@@ -5,14 +5,18 @@ let
   ipsetExclude = ./lists/ipset-exclude.txt;
 in
 {
-  services.zapret = {
+  services.zapret2 = {
     enable = true;
     configureFirewall = true;
     httpSupport = true;
     udpSupport = true;
     udpPorts = [ "443" "50000:50100" ];
   };
-  services.zapret.params = [
+  services.zapret2.rules = [
+    "--qnum=200"
+    "--lua-init=@${pkgs.zapret2}/share/zapret2/lua/zapret-lib.lua"
+    "--lua-init=@${pkgs.zapret2}/share/zapret2/lua/zapret-antidpi.lua"
+
     # HTTP — глобальный multidisorder + исключения
     "--new"
     "--name=http"
@@ -59,7 +63,7 @@ in
     # Discord/STUN
     "--new"
     "--name=discord"
-    "--filter-udp=50000:50100"
+    "--filter-udp=50000-50100"
     "--lua-desync=fake:blob=0x00000000:repeats=3"
   ];
 }

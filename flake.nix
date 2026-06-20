@@ -12,10 +12,11 @@
 
   outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-      ];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }: {
+        checks.integration-test = import ./tests/integration.nix {
+          inherit pkgs inputs;
+        };
         devShells = {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
@@ -27,7 +28,8 @@
         };
       };
       flake = {
-        homeManagerModules.default = import ./config { inherit inputs; };
+        nixosModules.default = import ./modules/nixos.nix;
+        nixosModules.config = import ./config { inherit inputs; };
       };
     };
 }

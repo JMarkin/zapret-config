@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "allow-domains": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781607943,
+        "narHash": "sha256-m2RtZqVQq8GctIL/aNPlXAWxk7gCsITsly4lWmaXBY4=",
+        "owner": "itdoginfo",
+        "repo": "allow-domains",
+        "rev": "7a8364c9a99b1dd9475f4e45550213c7b3a087cb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "itdoginfo",
+        "repo": "allow-domains",
+        "type": "github"
+      }
+    },
+    "dlc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781931238,
+        "narHash": "sha256-XuWsZ+b6GWcMj7beiksIGoA956dDdzIi3tox0GrnDUc=",
+        "owner": "v2fly",
+        "repo": "domain-list-community",
+        "rev": "e1b6519448aaccdf4068dc165d23b11882d0251e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "v2fly",
+        "repo": "domain-list-community",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -51,6 +83,8 @@
     },
     "root": {
       "inputs": {
+        "allow-domains": "allow-domains",
+        "dlc": "dlc",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs"
       }
