@@ -1,9 +1,10 @@
-{ lib, pkgs, inputs, ... }:
+{ inputs, ... }:
 let
   dlc = inputs.dlc;
   allowDomains = inputs.allow-domains;
   ipsetExclude = ./lists/ipset-exclude.txt;
 in
+{ pkgs, ... }:
 {
   services.zapret2 = {
     enable = true;
