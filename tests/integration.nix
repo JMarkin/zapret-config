@@ -49,6 +49,17 @@ pkgs.testers.nixosTest {
 
     # Phase 1: Russian sites excluded from DPI — must work without bypass
     print("=== Phase 1: Russian exclude (must NOT be desync'd) ===")
+
+    # DNS diagnostics
+    for cmd, desc in [
+        ("cat /etc/resolv.conf", "resolv.conf"),
+        ("nslookup esia.gosuslugi.ru 2>&1 || dig esia.gosuslugi.ru +short", "esia lookup"),
+        ("nslookup gosuslugi.ru 2>&1 || dig gosuslugi.ru +short", "gosuslugi lookup"),
+        ("curl -v --max-time 10 https://esia.gosuslugi.ru 2>&1 || true", "esia curl verbose"),
+    ]:
+        status, out = machine.execute(cmd)
+        print(f"  [{desc}] exit={status}\n{out[:500]}")
+
     for url in ["https://esia.gosuslugi.ru"]:
       status = machine.succeed(
           "curl -s -o /dev/null -w '%{http_code}' -L --max-time 15 " + url
