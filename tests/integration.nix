@@ -14,7 +14,7 @@ pkgs.testers.nixosTest {
       imports = [ nixosModule configOutput ];
 
       boot.kernelModules = [ "nfnetlink_queue" ];
-      environment.systemPackages = with pkgs; [ yt-dlp curl tcpdump ];
+      environment.systemPackages = with pkgs; [ yt-dlp curl tcpdump bind.dnsutils ];
     };
   };
 
@@ -55,7 +55,7 @@ pkgs.testers.nixosTest {
         ("cat /etc/resolv.conf", "resolv.conf"),
         ("nslookup esia.gosuslugi.ru 2>&1 || dig esia.gosuslugi.ru +short", "esia lookup"),
         ("nslookup gosuslugi.ru 2>&1 || dig gosuslugi.ru +short", "gosuslugi lookup"),
-        ("curl -v --max-time 10 https://esia.gosuslugi.ru 2>&1 || true", "esia curl verbose"),
+        ("curl -v --max-time 10 https://esia.gosuslugi.ru 2>&1", "esia curl verbose"),
     ]:
         status, out = machine.execute(cmd)
         print(f"  [{desc}] exit={status}\n{out[:500]}")
