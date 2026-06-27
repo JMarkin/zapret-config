@@ -47,7 +47,17 @@ pkgs.testers.nixosTest {
     dump_diagnostics()
     machine.sleep(2)
 
-    # Phase 1: Basic HTTP
+    # Phase 1: Russian sites excluded from DPI — must work without bypass
+    print("=== Phase 1: Russian exclude (must NOT be desync'd) ===")
+    for url in ["https://gosuslugi.ru", "https://www.gosuslugi.ru"]:
+      status = machine.succeed(
+          "curl -s -o /dev/null -w '%{http_code}' -L --max-time 15 " + url
+      )
+      print(f"  {url}: HTTP {status.strip()}")
+      assert status.strip() in ["200", "301", "302"], \
+          f"{url}: HTTP {status.strip()} — exclude broken?"
+
+    # Phase 2: Basic HTTP (DPI bypass required)
     for url in ["https://youtube.com", "https://rutracker.org"]:
       status = machine.succeed(
           "curl -s -o /dev/null -w '%{http_code}' --max-time 15 " + url
@@ -55,7 +65,7 @@ pkgs.testers.nixosTest {
       print(f"  {url}: HTTP {status.strip()}")
       assert status.strip() not in ["000", ""], f"{url} unreachable"
 
-    # Phase 2: YouTube video metadata
+    # Phase 3: YouTube video metadata
     title = machine.succeed(
         'yt-dlp --simulate --print title '
         '"https://youtube.com/watch?v=dQw4w9WgXcQ"'
@@ -63,7 +73,7 @@ pkgs.testers.nixosTest {
     print(f"  Video title: {title}")
     assert len(title) > 0, "Empty title — YouTube metadata blocked?"
 
-    # Phase 3: Video segment URL
+    # Phase 4: Video segment URL
     video_url = machine.succeed(
         'yt-dlp -f best --get-url '
         '"https://youtube.com/watch?v=dQw4w9WgXcQ"'
@@ -72,7 +82,7 @@ pkgs.testers.nixosTest {
     assert "googlevideo.com" in video_url, \
         "Video URL doesn't point to googlevideo.com"
 
-    # Phase 4: Download first 1MB of the segment
+    # Phase 5: Download first 1MB of the segment
     result = machine.succeed(
         "curl -r 0-1048576 --max-time 30 -s -o /tmp/video_segment.mp4 "
         "-w '%{http_code}' '" + video_url + "'"

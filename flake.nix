@@ -25,6 +25,7 @@
               nodejs
               curl
               jq
+              just
             ];
           };
         };
