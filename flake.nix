@@ -23,6 +23,8 @@
               zapret2
               nixd
               nodejs
+              curl
+              jq
             ];
           };
         };
