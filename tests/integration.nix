@@ -104,6 +104,16 @@ pkgs.testers.nixosTest {
     print(f"  Downloaded: {size} bytes")
     assert int(size) > 1024, "Downloaded less than 1KB — data not flowing"
 
+    # Phase 6: inkstory.net (excluded in local-exclude.txt)
+    print("=== Phase 6: inkstory.net (must NOT be desync'd) ===")
+    for url in ["https://inkstory.net"]:
+      status = machine.succeed(
+          "curl -s -o /dev/null -w '%{http_code}' -L --max-time 15 " + url
+      )
+      print(f"  {url}: HTTP {status.strip()}")
+      assert status.strip() in ["200", "301", "302"], \
+          f"{url}: HTTP {status.strip()} — exclude broken?"
+
     print("=== ALL CHECKS PASSED ===")
   '';
 }
