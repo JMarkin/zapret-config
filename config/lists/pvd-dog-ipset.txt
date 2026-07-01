@@ -1,5 +1,5 @@
 # Auto-generated from https://raw.githubusercontent.com/pvd-dog/russia-no-vpn-list/main/russia-no-vpn-list_by_%40pvd_dog.json
-# Updated: 2026-06-30T08:55:49Z
+# Updated: 2026-07-01T09:28:47Z
 
 103.74.94.0/24
 104.18.6.0/24
